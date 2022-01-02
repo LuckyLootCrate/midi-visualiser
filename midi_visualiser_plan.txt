@@ -1,0 +1,585 @@
+i want to be able to visualise the midi and have chord symbols at the bottom at the same time
+when i get better, i could probably start making it look nice like the curiosity or veryserious song video
+
+Basic stuff I want to implement:
+    - Ensure that the midi actually displays properly
+    - Divide the screen height by the range of midi notes there are, and make each midi note a certain proportion of the screen height
+    - Set a tempo, so you know how long each midi note should be
+    - wait, how does MIDI even keep track of note duration???
+    - DONE WOOOOO thank you open source
+    
+
+
+Bugs I gotta fix:
+    - Make it so that the program doesn't crash if you don't choose a MIDI file immediately
+    - Ok why are the notes not showing?? There are no other errors.
+    
+    - OK THIS WAS BECAUSE I BLITTED IT TO SOME RANDOM IMG OBJECT INSTEAD OF THE SCREEN WHYYYY
+    
+Tweaks:
+    - Ensure that the notes are active in the centre of the screen (or at least make it so that you can customise where the activated line is)
+    - Fix the tempo issue lol
+    - DONE???? You just gotta toy around with the parameters a bit
+    
+Refactoring:
+    - Separating the file input system from the actual visualisation
+    - If no song is loaded:
+        - right clicking should open the files immediately
+    - If a song is loaded:
+        - right clicking should pause the visualisation
+        - then it should open the files
+    
+Advanced Stuff I want to implement:
+    
+    - The chord symbols must also have coloured backgrounds like the TETo possibly
+    
+    - Possibly make chords move in the background at the same speed as the notes
+    
+    - Different styles of visualisation, including the kurage background (will need your current code to be immaculate)
+    - Make it so that the music can play at the same time as the MIDI
+    - Include a loading screen
+    
+    - Different velocities are different shades??? Allowing for amogus pixel art lol
+    - Option to disable drums
+    - Ability to click on a note and change its colour
+    -
+    
+Completed Tasks:
+    - Use different colours for different instruments
+    - Make it so that note colours are based on shades, so that you don't have to specify a colour for when a note is active
+    - Ensure that proper key bindings are used, such as Ctrl+O to open files and Ctrl+S to save as a video
+    - Be able to zoom in and out
+
+    
+    
+current_spawning_distance = current_pos - (width//2)
+current_pos = (start_time - time_left) * pixels_per_second
+
+current_pos = distance + (width//2)
+(start_time - time_left) * pixels_per_second = current_spawning_distance + (width//2)
+time_until_note_sounds * pixels_per_second = current_spawning_distance + (width//2)
+
+- Use the shutil library to make the videos so that files don't become monsterously huge?? test pygame screenshots first though
+- it should be simple since the only thing changing is the type of rectangle which is drawn, which should be quite easy to port over??
+
+OK THE ONLY REASON WHY THE NOTES WERE NOT ALIGNED WAS BECAUSE I HAD DIFFERENT VALUES FOR THE SCREEN WIDTH IN THE CONFIGURATION FILE!!!!!
+
+- Full screen support
+- Create different types of visualisations, curiosity
+
+- If i want to create multiple visualisations, i want to be able to keep the MIDI reading stuff the same, but change how they are displayed
+- That means you could have a backend class which handles the file input and MIDI reading, then have different visualisation classes
+- The backend class could also be expanded so that it could record the visualisation per frame, so you wouldn't need to copy that, I love inheritance
+- Only thing that would need to change are the methods for the visualisation class
+
+Stuff that would be changed
+- We would keep most of the configuration variables the same, but remove stuff like margin_y since that would affect stuff
+- That would need to be changed with something like edge_margin, but make it clear that the edge is referring to where notes AREN'T falling
+- You would also need to change the active line method so that the line is drawn horizontally, but that was a bit obvious
+- Thing that would need to change is stuff like left_edge_timestamp to become top and bottom timestamps
+- mid_to_left_time should also be changed to mid_to_bottom_time for the visualisation
+- A key thing to note is that since these are both properties which cannot be overridden, the model is as follows:
+
+-Have a base backend class which contains the file handling and a method to run the specified visualisation
+- Each visualisation class will have a different method for displaying, and will have different variable names for mid_to_left_time since it'll be ubgey
+- In fact, this should still work when I go for crazy visualisations like the KURAGE one, since they will share the same backend class
+- thinking about it now, they SHOULD NOT inherit from the backend class because that would make no sense, but they should however include the backend as a parameter!
+- this will help to avoid parameter spam WOO
+
+IT WORKED!!!
+new tasks to work on:
+    - Shortcut to easily go back to the beginning
+    - When you zoom out and stuff has passed you, they disappear...
+    - What if you made the notes transparent?
+    - Ability to add chord symbols which automatically display either like the ravenworks chocobo or the sardine teto, in groups of 4 beats
+    - Export as a video
+    - Allow full screen support / ability to change the size of the window (should the window size change when doing synthesia style?)
+    - Bro what if you made the background multicoloured, or faded it across the duration of the song, and the notes would also change colours
+    - add a watermark lol
+    - add a proper menu so you can choose which visualisation to choose
+    - maybe have the menu buttons in the top left corner and make them invisible until you hover over them (or just use tkinter to choose the visualiser at first)
+    - you should be able to specify chords by entering into a file, something like Cm7[b] where the b is the rhythm
+    
+New visualisations to work on:
+    - Should the chords be in a separate visualisation or should there be an option to add them to existing ones?
+    - You could do different styles of chords variations
+    - You should also be able to choose whether the notes are rounded
+    - What if notes are transparent?
+    - Curiosity style visualisation (so you need a new margin to hold the chords)
+    - Veryserioussong style visualisation (set colour schemes?)
+    - have the timeline continually move
+    
+Bugs to fix:
+    - when you zoom out, the notes which go off the screen disappear fully...
+    - not happening lol
+    
+Refactoring:
+    - I want to make sure that I won't need to repeat these properties for each separate visualisation
+    
+    @property
+    def current_to_exit_time(self):
+        """How long it takes for a note to travel from the current time until exiting."""
+        
+        return self.app.note_travel_time * self.activation_proportion
+
+    @property
+    def entry_to_current_time(self):
+        """How long it takes for a note to travel from entering to the current time."""
+        
+        return self.app.note_travel_time * (1 - self.activation_proportion)
+        
+    - These should be a part of the backend, but the challenge is that each visualisation has a different activation proportion
+    - So this means that the backend must know the visualisation which is used beforehand
+    
+    - but if my application is going to take an input what visualiser is to be used, this means that the program won't know what to display at first
+    - oh wait, i dont think i need to create a whole new visualisation runnner class if i just set a default if nothing is selected...
+    - i could then also cache what the user's last visualiser was and then make that the default for the next time...
+    
+    - The visualisations needs to know the app so it knows the configuration parameters
+    - The app needs to know the visualisation so that it knows how to display the MIDI
+    - This is impossible
+    
+    - The visualisation needs to know the app
+    - The VisualisationRunner needs to know the visualisation
+    - The app needs to know the VisualisationRunner
+    - Not impossible
+    
+    You would segregate the file input and UI from the actual visualisation engine running behind the scenes
+    
+Bug Fix:
+    - There is a slight delay whenever you play audio, but since the video doesn't know about that, 
+    there is a huge time delay between playing the audio and seeing the video
+    
+    - That means that the video should wait until the audio has completed loading before moving
+    - However, there is a tick command which happens every frame and is used to compensate for lagginess, but is detrimental in this case
+    - So this means if we just ignore whatever the tick command says while the audio is being prepared, then it will be ok
+    - We did accomplish this however, but the only problem occurs when the audio is ok, because there is still one final tick command
+    - WE FIXED IT!
+    
+NO WE CAN'T PLAY MIDI FILES FROM TIMESTAMPS, guess we'll just have to do stuff by note by note lol
+
+you are given a list of timestamps of note starting times
+you need to find the nearest lowest and nearest highest values
+
+
+- OPTIMISATIONS NEEDED (stop the blinking, make it lag for a bit or something)
+- dialogue box so you can switch between visualisations
+- test what happens when notes are semi transparent
+- chords??????
+    
+- New bug, where i believe it comes from the fact that the initialisiation of the visualisation within the app is somewhat recursive in nature
+- FIXED IT, IT WAS DUE TO THE UPDATE VISUALISER COMMAND LOL (you forgot to do vis(self) and just returned the visualiser on its own)
+- i also fixed the blinking problem by optimising some code :flushed:
+
+If no file is currently selected:
+    - if a new file is chosen:
+        - use that new file
+    - if cancelled:
+        - continue doing nothing
+if a file is currently selected:
+    - if a new file is chosen:
+        - use that new file
+    -if the same file is chosen:
+        - restart the current file from the beginning
+    - if cancelled:
+        - continue using the current file from the current time
+        
+
+- add end key support
+- slow down the scrolling lol
+
+
+- LOL WE MANAGED TO DO SOME SCREEN RECORDING WOOOO pygame image saving is surprisingly fast!
+- BUT DIFFERENT SCREEN RESOOLUTIONS BREAK IT WHYYYYY
+
+- synthesia has the wrong margin thing lol
+- add checkboxes which can alter the visualisations
+- actually all things have the wrong margin lol
+
+- 960 600 doesnt work?
+- strange... 960 600 works when you specify it beforehand
+- set up a loading screen while ffmpeg runs
+
+960 works when you start with it and change back to it
+
+WHY DOES 612 418 WORK WHEN IT STARTS WITH 1250 600
+
+
+ooo new revelatioon:
+if you resize the screen before importing anything and ever pressing play, it works
+wait what
+everything has just started working??????
+
+- resizing while it is recording definitely breaks it
+- hmmmm, it seems that it breaks when you resize in more than one direction
+
+
+USE THIS TO FIND OUT THE ERRORS
+ffmpeg -r 30 -f image2 -s 1250x600 -i ./tmp_images/%08d.jpg -vcodec libx264 -crf 25 -pix_fmt yuv420p ./output/output.mp4
+
+-vf "crop=trunc(iw/2)*2:trunc(ih/2)*2" will fix the height issue???
+
+ffmpeg -r 30 -f image2 -s 1250x600 -i ./tmp_images/%08d.jpg -vcodec libx264 -crf 25 -pix_fmt yuv420p -vf "crop=trunc(iw/2)*2:trunc(ih/2)*2" ./output/output.mp4
+
+shorter one:
+ffmpeg -r 25 -f image2 -i ./tmp_images/%08d.jpg -vcodec libx264 -crf 25 -pix_fmt yuv420p -vf "crop=trunc(iw/2)*2:trunc(ih/2)*2" ./output/output.mp4
+
+stuff to do:
+    - debug the ffmpeg command (damn it...)
+    - add more buttons and customisations, such as round corners, unfilled notes, margins and pixels to be removed from x and y
+    - add chord support? i attmpeted it
+    - actually poggers that i got the recording to work tho
+    
+screw ffmpeg im using moviepy
+aw shit moviepy is really slow
+
+im sorry ffmpeg, BUT WHY YOU SO BUGGY I WANNA USE YOU
+- so what actually breaks it?????? no jpg data? wtf does that mean? at least the odd numbered dimensions thing is fixed though!
+-does it break because of the different frame rate?????
+
+- hmmmm cv2 takes up a LOT OF STORAGE but is fast????
+- hmmmm moviepy takes up very very little storage but is very very slow???
+- bruhhh ffmpeg is actually the best of both worlds BUT IS SO BUGGY
+
+Testing: 473 frames of video
+CV2: converts in 19s but takes up 41MB (hmmm youtube allows up to 128GB of upload time, so maybe i could do some ultra HD visualisations?)
+Moviepy: converts in 8 mins and takes up 734KB
+ffmpeg: converts in 21s and takes up 1139KB
+
+i am pretty sure that ffmpeg works fine in the default resolution, but i will run tests to see if that is the case:
+DEFAULT RESOLUTION:
+    - works well
+    
+- bruh i will just restrict people from recording unless it is in the default resolution lol
+- why is it working now??
+- is it because i started off with normal tests first???
+- is it because i removed the 1250x600 thing???
+- aw shit i think that might be the culprit...
+- IT ALL SEEMS TO WORK NOW
+- LOL
+
+
+Final stuff to work on:
+    - add more buttons and customisations, such as round corners, unfilled notes, margins and pixels to be removed from x and y
+    - add chord support? i attmpeted it
+    - fix the margin issue when you zoom in too much (check the test midi thing)
+    
+- Chords can be a class with a starting time, like the notes
+- Then they could be centered on the x axis by getting the width of the chord and subtracting half of it from the starting time
+- You could center it on the y axis by getting the user to determine the chord margin and then add it to the y position of the chord
+- Actually, you wouldn't need to do that, you can center it by getting the height of the edge margin, dividing it by 4, and adding the quarter to the y position of the chord
+- You also need to consider that chords will be displayed differently for different visualisations, and you should also be able to turn chords off
+- Chords should also be able to generate like in the veryserioussong styles
+- Is there anyway to implement colour schemes into visuaisations?
+
+- perhaps you could use ffmpeg to trial how videos will look like, but use cv2 for actual processing (you may run out of storage lmao)
+- WAIT, YOU CAN USE YOUR SD CARD SO YOU WON'T RUN OUT OF STORAGE BIG BRAIN!
+
+- The wider the screen, the less columns can fit? How does that work?
+- FIXED, because someone put an extra +1, which     caused another column to be drawn :(
+- Now make the margin a percentage
+- DONE
+
+- Ability to save your configurations in a file
+
+the problem is that you cannot get combobox values outside of the mainloop
+so im gonna try and assign it to a variable whenever you leave close the program, or whenever you change the value
+
+the get_configuration method should only return the values from the text boxes
+but the update configuration should actually apply the correct values
+
+NICE, now add some tabs for changing frame rate and where videos get exported and also the video start time
+
+dont forget to add the folder and filename customisation
+
+seconds before start doesnt work yet
+
+
+
+
+- ability to change where the active line is lol
+- also bug where you can enter invalid filenames...
+- geta  dialogue box to open for you!
+- also, where are the chords........
+- make the tkinter more responsive and pad some stuff out lol
+
+- make sure the program doesn't freeze while ffmpeg is working lol (probably impossible...)
+
+- also decide if the chords is on the lower or higher register of the notes
+
+chords will be super interesting:
+    - you could a teto style visualisation, where you could have rectangles which lighten up whenever a chord is played, like the notes
+    - you could do a very simple veryserioussong style visualisation where they just pop up on side of the screen
+    - you could also do the one where the chord symbols just kinda fly across the screen on their own (and light up when the line gets to the center of them)
+
+valid chords:
+Cm[a]
+C#m7b5[b]
+anything is actually valid here[b]
+G7[c.]
+
+![d] special case where no chords should play
+
+invalid chords:
+Cm[ngsi]
+D4[.]
+C7[k]
+
+    crotchet_duration = 60 / tempo # How long a single crotchet beat takes in seconds
+    
+    NOTE_DURATIONS = {
+        'a': crotchet_duration * 0.25,
+        'b': crotchet_duration * 0.5,
+        'c': crotchet_duration * 1,
+        'd': crotchet_duration * 2,
+        'e': crotchet_duration * 4,
+        'f': crotchet_duration / 6,
+        'g': crotchet_duration / 3,
+        'h': crotchet_duration / 1.5,
+        'i': crotchet_duration * 0.125
+    }
+    
+# Margin between the chord and the notes
+        self.margin = (self.app.edge_margin - self.height) // 2
+        self.y_pos = app.screen_height - (self.margin*3)
+        
+        
+change themes of the visualiser!
+
+- anyway to convert the draw_video and export_video into one thing???
+ order of drawing
+ 1. Draw background
+ 2. Draw notes
+ 3. Draw active line
+ 4. Draw edge margins
+ 5. Draw chords
+ 
+ - chord style
+ - chord margin
+ - chord path
+ - draw margin
+
+ - fix the chord margin issue DONE
+ 
+ - hmmm if you start recording by pressing Ctrl+S at the end, it will not show chords... DONE
+ 
+ - merge exporting and draw video into same thing oo
+ - add barlines lol
+ - consider opacity again lol
+ - ability to scroll to zoom
+ - FIX THE SYNTHESIA VISUALISATION AND MAKE A CURIOSITY STYLED CHORD THING (so pog that i got veryserioussong visualiation complete)
+ 
+what do you call a very big bin (28)
+what do asian people think is happening in afghanistan (11)
+what is it called if you steal someone's tar (18)
+where do you put all your terrible ideas (38)
+who is terraban's secret identity (41)
+ 
+
+def export_video(self):
+    if not self.has_initialised_export:
+        self.init_video()
+        self.has_initialised_export = True
+        self.app.time = self.app.start_time
+        delete_and_create_folders()
+        self.frame = 0
+        
+    else:
+        # So that the last frame isn't skipped
+        if self.app.time - (1 / self.app.frame_rate) <= self.app.end_time:
+            print(f"Current: {self.app.time:.2f}\tFrame: {self.frame:04}\tEnd time: ({self.app.end_time:.2f})")
+
+            # Timestamps of the very edges of the screen
+            self.exit_timestamp = self.app.time - self.current_to_exit_time
+            self.entry_timestamp = self.app.time + self.entry_to_current_time
+
+            self.get_current_items_on_screen()
+            self.draw_frame()
+            self.save_current_frame()
+        else:
+            self.convert_to_video()
+
+def draw_video(self, dt):
+    if not self.app.has_initialised_video:
+        self.init_video()
+        self.app.has_initialised_video = True
+
+    else:
+        # Timestamps of the very edges of the screen
+        self.entry_timestamp = self.app.time + self.entry_to_current_time
+        self.exit_timestamp = self.app.time - self.current_to_exit_time
+
+        self.get_current_items_on_screen()
+        self.draw_frame()
+
+        if self.app.time >= self.app.end_time:
+            self.app.is_paused = True
+            self.app.time = self.app.end_time
+
+        if not self.app.is_paused:
+            self.app.time += (dt / 1000)
+            
+- opacity (+ the toggle options in settings??????) (nope)
+- toggle option for barlines    
+- margin error (again) not defined!
+
+- background gradually changes color????
+- ability to set note colour themes (themes tab in general would be nice, stuff like Obsidian colour scheme idk lol, change colour of margin)
+- choose either from a set colour palette or create your own??? probably not
+- is there a way to make the configuration stuff a little cleaner? use another file for configuration, (or evven the sameone) and just read from the file
+instead of passing data around everywhere
+
+- refresh colour palette + add some padding and shit
+- why wont the color palette turn up????
+- oh wait i forgot to pack the frames themselves....
+- update the bg color thing also
+
+
+- fix the chord glitching y position when there is no margin
+- also try and see if you can make chords small, even when the margin doesnt change size (probably too hard)
+
+- excuse me why is the margin still being drawn
+- also why are the chords on the top when i specified them to be on the bottom????
+- WHY DID THIS TAKE AN HOUR
+
+- hmm, maybe check if the fonts will crash
+- if they do, make all of the fonts smaller (somehow)
+- my strategy is to have a font size offset (which would keep decreasing until the fonts no longer crash)
+- then once teh fonts do not crash, they will stay at that size until the end
+- however, when you change the zoom again, they will return back to their default size, and repeat the algorithm
+
+
+self.chord_offset = 0
+...
+font_size = get_font_size()
+for chord in chords:
+    draw_chord(chord, size=font_size - chord_offset)
+    
+if chords_crash():
+    self.chord_offset += 1
+...
+if zoom:
+    self.chord_offset = 0
+
+
+# note that making the window bigger will not reset chord offset so the chords might remain really small even though there's room
+
+- ability to hide the time marker
+- ability to make the time marker move dynamically lmao
+- toggle turning time marker on and off
+
+
+THERE WAS A METHOD TO THE MADNESS, MOVING THE TIME MARKER DYNAMICALLY ACCIDENTALLY CREATED THE STATIC EFFECT I WAS LOOKING FOR NICE!!!!!!!!
+i even accidentally discovered the drifting visualisation, which looks AMAZING!!
+this makes me feel that the synthesia and classic visualiser are completely different, whereas the simple ones i added by changing the time marker
+can easily be done for both.
+
+ - all i need to do is separate them into stuff like visualiser styles or types? visualisations and visualisation styles?? hmmm
+ - bruh exporting the video gives you a different colour scheme lmao
+ - it also removes the time markers, but this probably a very simple fix
+ 
+ - maybe an option to randomise the colours, so that you dont get different colours each time you reset
+ - DONE
+ - option to change how bright the note activation thing is
+ 
+ - fix the synthesia visualiser and find a way to declutter the configuration thing
+ - get a play for notes to play audio again?
+ 
+ y_pos = round((self.app.screen_height - (self.margin_y*margin_multiplier) - note_height) - (row_no * row_height))
+ 
+ - synthesia: notes disappear too early when the screen is tall
+ - thats because the notes do not stretch when changing the screen size in synthesia
+ - BRUH THATS BECAUSE I FORGOT TO CHANGE THE PIXELS PER SECOND METHOD FOR THE SYNTHESIA THING FIXED!!!!
+ 
+ - synthesia: the chords are generate from top to bottom when it should be bottom to top
+ y_pos = round(-(note.end_time - top_edge_timestamp) * self.pixels_per_second)
+ 
+ - still huge problem with the text not changing size when you change the size of the screen
+ 
+ the synthesia visualisation needs the entry timestamp but the other ones need the exit timestamp
+ 
+ 
+ DONE
+ 
+ - ability to change margin color
+ - potential to line up for beats for the static vis? 4/4
+ - maybe whenever you zoom, it allows you to view 1 bar, 2 bars, 4 bars?
+ 
+ if you have 90 bpm, how long will it take for for beats to elapse?
+ how beats per second?
+ 90 / 60 = 1.5 bps
+ that means 1/ 1.5 = 0.66s per bbeat 
+ 4 beats will take 4/90 = 2/45
+ 
+ - hmmm, it does work but whenever it changes screen, there is a small offset each time, why??
+ (glad it mainly works though lol)
+ - as i suspected, the offset is reduced when there is a higher framerate
+ - a solution is not to start the time marker at exactly 0 when the frame changes, but calculate where it shouldve been had there not been a frame change
+ - WOOOO I JUST SUBTRACTED WOOO I LOVE MATHS
+ 
+ - chord visualiser where it activates with no padding?
+ - why does the synthesia visualiser not have the first chord line??
+ 
+ - hmmm the dynamic chords should have two lines surrounding each chord
+ - whereas the dynamic inline should have only one line per chord
+ - oooo thats because of the silences i added, do not render the line for silence if using inline dynamic
+ 
+ - the last chord should have another chord line to indicate that it finished (for dynamic classic)
+ - also for classic vis, the dynamic inline makes all the chord offset wrong by one
+ - i also fixed a bug where the last chord line wouldnt display
+ 
+ - option to change color of time marker, chord lines and margin (hmm maybe not)
+ - monochrome theme, remove white theme lmao (just invert it in post processing)
+ 
+ - you cant seek to notes if you are too zoomed in lol
+ - option to get the full uncompressed video lol (must save it to the sd card to avoid crashing your pc lol) cv2 is good for that i think
+ 
+ 
+ long as they are joined to a nearby word. or else it won't be valid
+ 
+ 
+ - allow notes to be played...
+ - fix bug where you cannot seek to notes if you are too zoomed in lol
+ - specifically notes ahead, for some reason (thats because notes ahead dont get loaded into the current notes list)
+ - so to fix it, you need a buffer of time so that the next note is technically a part of current_notes (Which doesnt actually make sense)
+ - maybe make something called next_offscreen_note and previous_offscreen_note
+ 
+ UNIMPORTANT STUFF THAT HAVE A REALLY LOW FIX PRIORITY ATM
+ - make the notes play sound
+ - allowing you to skip to notes which aren't in the frame
+ - cleaning up the tkinter configuration menu
+ - ensuring that the chords change size when you change the size of the screen or zoom out
+ 
+ STUFF I COULD FIX
+ - specifiying time until ending
+ - ensuring that the time thing properly ends on the very end of the last note
+ - option to wait until the last note goes off the screen rather than specifying ending time
+ 
+ 
+ - make it so that it goes to the last tab opened for the config
+ - consider adding gradients for the background
+ - add medly color scheme lol
+ 
+ - note opacity lol
+ - note darkness
+ 
+ 
+ HOW TO ADD MUSIC TO VIDEO FILE
+ ffmpeg -r <change_to_match_frame_rate> -f image2 -i ./tmp_images/%08d.jpg -i audio.mp3 -c:a copy -shortest -vcodec libx264 -crf 25 -pix_fmt yuv420p -vf "crop=trunc(iw/2)*2:trunc(ih/2)*2" test.mp4
+ 
+ - only reason i want to do this is so that i can upload at full resolution lol
+ - i think that this should work, but of course this is gonna mess with the fact that we can specify to choose to play the music at different starting times
+ 
+ 
+ -filter_complex "[1]adelay=62000|62000[aud];[0][aud]amix"
+ you could also improve it by changing the colour of the notes as they move towards the thing (for syntehsia visualsiaiob) (like coming in and out of shadows)
+ 
+ 
+ ability to play audio with p: playback mode is activated and you can press p to get out of it
+ in playback mode you can only play from the start
+ 
+ - chords don't correctly enter on screen
+ - also the thing where the chords end off screen also doesnt correctly work?????
+ - add a gradient to the margin??
+ - add horizontal lines to the visualisation to replicate the medly note editor
+ - make it so that note colours can change colour when they go past the time marker thing (medly official visualiser)

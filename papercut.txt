@@ -1,0 +1,55 @@
+!!![c],
+A[e], E/G#[e], G[d], F#[d], Bm[d], still Bm (but lower)[d]
+Bm[c], C#m[c], D[c], E[c], C#m[d], F#m[d],
+FM7[d], BbM7[d], Bsus4[d], E[c], WOO[c],
+
+A[e], E/G#[e], G[d], F#[d], Bm[d], still Bm (but lower)[d]
+D[c], Dm/F[c], E[d], C#m[c.], F#[b], F#[d],
+Bm7[e], Esus4[c.], E[b], E[d],
+
+AM7[d], AM7[c], AM7[b],
+D[b], D[e],
+E[d], A[d], DM7[e],
+
+Dm7[c.], G[b], G[d],
+CM7[c.], F[b], F[d],
+BbM7[c.], Eb[b], Eb[d],
+Am7b5[c.], Abm6[b], Abm6[d],
+Gm[c.], Cm[b], Cm[d],
+Fm[c.], Bb[b], Bb[d],
+Gm[c.], C7#9[b], C7#9[d],
+Cb[d], Bb[c], WOO (again)[c],
+
+Eb[e], Bb/D[e], Db[d], C7[d], Fm[d], still Fm (but lower)[d]
+Ab[c], Abm/Cb[c], Bb[d], Gm[c.], C[b], C[d],
+Fm7[e], Bbsus4[c.], Bb[b], Bb[d],
+
+EbM7[d], EbM7[c], EbM7[b],
+Ab[b], Ab[e],
+Bb[d], Eb[d], Ab[e],
+
+Abm[c.], Db[b], Db[d],
+GbM7[c.], Cb[b], Cb[d],
+EM7[c.], A[b], A[d],
+D#m7b5[c.], Dm6[b], Dm6[d],
+C#m[c.], F#m[b], F#m[d],
+Bm[c.], E[b], E[d],
+C#m[c.], F#m[b], F#m[d],
+Em7[c.], A7[b], A7[d],
+
+DM7[e], Dm7/G[d], Dm7/G[b], Dm/F[c], C#m[b],
+C#m[c.], F#m[b], F#m[d],
+Bm[c.], E[b], E[d],
+C#m[c.], F#m[b], F#m[d],
+Bm[c.], E[b], E[d],
+C#m[c.], F#m[b], F#m[d],
+Bm[c.], E[b], E[c.],
+
+G[b], G[e], G[d.], E[c],
+thanks for watching![e],
+thanks for watching![e],
+thanks for watching![e],
+thanks for watching![e],
+
+
+

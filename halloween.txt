@@ -1,0 +1,25 @@
+Fm[d], Cm[d],
+Bbm7[c], Eb7[c], Ab[d],
+C#m7[c], F#7[c], BM7[d],
+Bbm6(add9)[d], C7#9[d],
+
+Fm[d], Cm[d],
+Bbm7[c], Eb7[c], Ab[d],
+C#m7[c], F#7[c], BM7[d],
+Bbm6(add9)[d], C7#9[d],
+
+Fm7[d], Cm7[d], Bbm7[c], Eb[c], AbM7[d],
+Db[d], AbM7[d], Gm7b5(add11)[d], C7#9[d],
+
+Fm7[d], Ebm7[c], Ab7[c], DbM7[d], Cm7[c], Cbm7[c],
+Bbm7[d], Fm/C[d], Gm7b5(add11)[d], C7#9[d],
+
+Db[d], C7[d], Fm(add11)[d], Ab7[d],
+Gm7b5[d], Caug[d], Fm9[c], Fbm9[c], Ebm9[c], Ab7alt[c],
+Db[d], C7[d], Fm7[d], Bb7[d], Gm7b5b9[d], C7#9[d], Fm9[e],
+
+Db[d], C7[d], Fm(add11)[d], Ab7[d],
+Gm7b5[d], Caug[d], Fm9[c], Fbm9[c], Ebm9[c], Ab7alt[c],
+Db[d], C7[d], Fm7[d], Bb7[d], Gm7b5b9[d], C7#9[d], Fm9[e],
+
+Db[d], C7[d], Fm[c], C7[c], Fm[d]
