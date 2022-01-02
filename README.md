@@ -16,5 +16,8 @@ Press <kbd>Ctrl</kbd> + <kbd>S</kbd> to save the frames as a video. It may warn 
 
 Press <kbd>P</kbd> to toggle playback mode on and off. In playback mode, you cannot pause or skip ahead in notes, but you can see the visualisation alongside MIDI audio. It may not sound good
 
+[![image.png](https://i.postimg.cc/m2mxQxSD/image.png)](https://postimg.cc/svG0rNqd)
+
+Using the *Kirby* visualiser (named in this way due to [this video](https://youtu.be/GZPziITo87s))
 
 
