@@ -1,7 +1,7 @@
 [DEFAULT]
 frame_rate = 60
-theme = MIDI
-visualisation = Static
+theme = Classic
+visualisation = Default
 
 activation_brightness = 0.3
 
@@ -16,7 +16,7 @@ notes_end_offscreen = True
 are_notes_filled = True
 roundedness = Not Rounded
 
-chord_path = halloween.txt
+chord_path = example.txt
 chord_margin_proportion = 0.33
 chord_style = Static
 chord_side = Top
@@ -25,4 +25,4 @@ chord_lines_enabled = False
 time_marker_enabled = True
 
 folder_to_save = output
-file_name = rock_new
+file_name = example

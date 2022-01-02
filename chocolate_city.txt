@@ -1,3 +1,0 @@
-Bb[d], Eb[d], F[c], F#dim[c], Gm[d],
-Cm[d], D7[d], Gm[d], Fm7[c], Bb7[c], ![e],
-Hello[c], I[c], Can[c], Do[c], This[c]

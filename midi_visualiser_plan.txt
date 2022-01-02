@@ -369,12 +369,6 @@ change themes of the visualiser!
  - ability to scroll to zoom
  - FIX THE SYNTHESIA VISUALISATION AND MAKE A CURIOSITY STYLED CHORD THING (so pog that i got veryserioussong visualiation complete)
  
-what do you call a very big bin (28)
-what do asian people think is happening in afghanistan (11)
-what is it called if you steal someone's tar (18)
-where do you put all your terrible ideas (38)
-who is terraban's secret identity (41)
- 
 
 def export_video(self):
     if not self.has_initialised_export:
